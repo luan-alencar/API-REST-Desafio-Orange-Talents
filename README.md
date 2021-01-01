@@ -312,7 +312,7 @@ public class ResourceExceptionHandler {
 ## Resposta da requisição quando o cpf ou email ou nome não seja validado: código 422 alguma entidade não foi possível ser processada
 
 
-[alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/13.jpg)
+![alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/13.jpg)
 
 
 
