@@ -89,12 +89,56 @@ Vantagens: Dar segurança e menor tráfego, e customizar o que se quer entregar 
 * Getters & Setters
 * Serializable
 
+```
+// construtor personalizado
+
+public ClientDTO(Client entity) {
+		this.id = entity.getId();
+		this.nome = entity.getNome();
+		this.email = entity.getEmail();
+		this.cpf = entity.getCpf();
+		this.dataNascimento = entity.getDataNascimento();
+	}
+```
+
 ## Validando os dados com as anotações  Beans Validation
 
 * @NotBlank(message = "Campo obrigatório")
 * @Email(message = "Favor entrar com um email válido")
 * @CPF(message = "Favor entrar com um cpf válido")
 * @PastOrPresent(message = "A data de nascimento não pode ser futura")
+
+```
+import java.io.Serializable;
+import java.time.Instant;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+
+import org.hibernate.validator.constraints.br.CPF;
+
+import com.sistemalima.contabancaria.entities.Client;
+
+public class ClientDTO implements Serializable{
+	
+	
+	private static final long serialVersionUID = 1L;
+	
+	private long id;
+	
+	@NotBlank(message = "Campo obrigatório")
+	private String nome;
+	
+	@Email(message = "Favor entrar com um email válido")
+	private String email;
+	
+	@CPF(message = "Favor entrar com um cpf valido")
+	private String cpf;
+	
+	@PastOrPresent(message = "A data de nascimento não pode ser futura")
+	private  Instant dataNascimento;
+```
 
 ### Entidades: Client
 
@@ -105,6 +149,27 @@ Vantagens: Dar segurança e menor tráfego, e customizar o que se quer entregar 
 * hashCode & equals
 * Serializable
 * JPA mapping
+
+```
+@Entity
+@Table(name = "tb_client")
+public class Client implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	// atributos basico
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	private String nome;
+	private String email;
+	private String cpf;
+	
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+	private Instant dataNascimento;
+```
 
 * Vai ser um objeto, que será monitorado e controlado, para manter a integridade do banco de dados.
 
@@ -132,6 +197,24 @@ Vantagens: Dar segurança e menor tráfego, e customizar o que se quer entregar 
 * Atributo básico , uma lista de erros.
 * Getters da lista
 * Método para adicionar erros
+
+```
+public class ValidationError extends StandardError{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private List<FieldMessage> errors = new ArrayList<>();
+
+	public List<FieldMessage> getErrors() {
+		return errors;
+	}
+	
+	// metodo para adicionar os erros na lista de erros
+	
+	public void addErro(String fieldName, String message) {
+		errors.add(new FieldMessage(fieldName, message));
+	}
+```
 
 ## Classe para tratar exceções: ResourceNotfoundException herdando de RuntimeException
 
