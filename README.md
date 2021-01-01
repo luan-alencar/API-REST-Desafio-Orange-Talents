@@ -271,15 +271,48 @@ public class ResourceExceptionHandler {
 	}
 ```
 
+## API devolvendo a resposta adqueda, codigo 404, o servidor não pode encontrar o recurso solicitado, entity not found.
+
+[alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/error%20404.jpg)
+
+## Tratando exceções nos campos de cpf, email, nome, dataNascimento quando não validados, retornando resposta adequada para o usuário.
+
+* Método da classe resourceExceptionHandller que vai tratar as exceções de validações
+
+```
+// metodo para retorna resposta http 422 / alguma entidade não foi possivel ser processada
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ValidationError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		ValidationError erro = new ValidationError();
+		erro.setTimestamp(Instant.now());
+		erro.setStatus(status.value());
+		erro.setError("Validation exception");
+		erro.setMessage(e.getMessage());
+		erro.setPath(request.getRequestURI());
+		
+		for (FieldError f : e.getBindingResult().getFieldErrors()) {
+			erro.addErro(f.getField(), f.getDefaultMessage());
+		}
+		return ResponseEntity.status(status).body(erro);
+	}
+```
+
+## Testando a requisição no Postman, inserindo dados inválidos, nome, cpf , email.
+
+```
+	"datanascimento" :  "1981-08-08T14:15:10Z",
+        "nome" : "",
+        "email" : "wagner.sistemalimagmail",
+        "cpf" : "043.944.504"
+
+```
+
+## Resposta da requisição quando o cpf ou email ou nome não seja validado: código 422 alguma entidade não foi possível ser processada
 
 
-
-
-
-
-
-
-
+[alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/13.jpg)
 
 
 
