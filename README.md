@@ -52,7 +52,163 @@ Spring Web: Crie aplicativos da web, incluindo RESTful, usando Spring MVC. Usa A
 
 ## Desenvolvimento do sistema e estrutura:
 
-* Padrão de divisão do Backend em camadas lógicas, para organizar o sistema e deixando flexível e de fácil manutenção
+* Padrão de divisão do Backend em camadas lógicas, para organizar o sistema, deixando flexível e de fácil manutenção.
+
+![alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/camadas.jpg)
+
+## Classes criadas no processo:
+
+### Resource: ClientResource (rest controller)
+
+* É a camada de recursos Web, que é implementada por um controlador Rest, obedecendo boas práticas de desenvolvimento.Esta camada vai ser responsável por receber as requisições da aplicação, e encaminhar as chamadas para os serviços responsáveis por realizar aquela ação do usuário de acordo com o comportamento do sistema.
+
+### Service: ClientService
+
+* Camada de serviço vai ter a lógica de negócio do sistema, é nela que iremos fazer algum cálculo, verificação, orquestração de alguma operação, a ordem que tem que acontecer as coisas, é nesta camada que teremos toda regra de negócio
+
+* @Transactional(readOnly = true): Utilizei essa anotação do spring,  para garantir a integridade do banco de dados, onde o próprio framework vai tratar de envolver a transação com o banco de dados. Como é uma operação só de leitura  coloquei um parâmetro para evitar que faça um look no banco, pois não precisamos travar o banco de dados só para ler os dados, essa anotação vai melhorar a performance do banco.
+
+### Repository: ClientRepository (data repositories)
+
+## A camada de acesso a dados , onde irá conter somente as operações de acessar os dados no banco de dados, exemplo:
+
+* Salvar
+* Atualizar 
+* Deletar
+* Buscar
+* Operações que vão no banco de dados e fazem alguma ação nele estarão nesta camada.
+
+## Data Transfer Objects (DTO): ClientDTO
+
+* Vai ser um objeto simples para carregar os dados entre o controlador Rest e a camada de serviço, e sua função será apenas para trafegar dados das entidades.
+Vantagens: Dar segurança e menor tráfego, e customizar o que se quer entregar para a aplicação
+
+* Atributos básico
+* Construtor default / Construtor com argumentos
+* Construtor personalizado recebendo uma entidade, para povoar o dto
+* Getters & Setters
+* Serializable
+
+## Validando os dados com as anotações  Beans Validation
+
+* @NotBlank(message = "Campo obrigatório")
+* @Email(message = "Favor entrar com um email válido")
+* @CPF(message = "Favor entrar com um cpf válido")
+* @PastOrPresent(message = "A data de nascimento não pode ser futura")
+
+### Entidades: Client
+
+* checklist:
+* Atributos básico
+* Construtor default / Construtor com argumentos
+* Getters & Setters
+* hashCode & equals
+* Serializable
+* JPA mapping
+
+* Vai ser um objeto, que será monitorado e controlado, para manter a integridade do banco de dados.
+
+## StandardError: Objeto criado no Resource para receber a exceção
+
+* checklist:
+* Atributos básico
+* Construtor default 
+* Getters & Setters
+* Serializable
+
+## ResourceExceptionHandller: Essa classe vai interceptar a exceção e fazer o tratamento adequado.
+
+* Métodos para tratar as requisições e devolver as respostas adequadas
+
+## FieldMessage : Classe auxiliar para carregar o nome do campo e as mensagem de respostas dos dados que não foram validados
+
+* Atributos básico
+* Construtor default / Construtor com argumentos
+* Getters & Setters
+* Serializable
+
+## ValidationError: Essa classe vai herdar da classe StandardError
+
+* Atributo básico , uma lista de erros.
+* Getters da lista
+* Método para adicionar erros
+
+## Classe para tratar exceções: ResourceNotfoundException herdando de RuntimeException
+
+* Exceção personalizada da camada de serviço
+
+## Configurar banco de dados de teste (H2)
+
+* H2 database, perfil de teste, JPA
+* checklist:
+* application.properties
+* application-test.properties
+
+## application.properties:
+
+* Perfil de teste para rodar um banco de dados provisório, para que toda vez que rodar a aplicação, o banco seja reiniciado para o estado inicial, onde podemos definir uma instância inicial para ele, vamos semear o banco de dados com alguns dados de testes, utilizando o banco de dados h2 em memória
+
+```
+spring.profiles.active=test 
+
+```
+
+* OBS: Como foi montado o backend do sistema em camadas, e a camada de serviço é quem conversa com a camada de acesso a dados, que por sua vez conversa com a entidade, então eu resolvi que toda parte de acessar o banco de dados, fazer transação, encerrar transação se encerre na camada de serviço, eu não posso deixar voltar para a camada do controlador com a seção do banco de dados aberta. As transações confirmadas serão encerradas na camada de serviço, e para garantir a propriedade open in view estará como false
+
+```
+spring.jpa.open-in-view=false
+
+```
+
+## application-test.properties:
+
+```
+application-test.properties:
+spring.datasource.url=jdbc:h2:mem:testdb spring.datasource.username=sa spring.datasource.password= spring.h2.console.enabled=true spring.h2.console.path=/h2-console spring.jpa.show-sql=true spring.jpa.properties.hibernate.format_sql=true
+
+
+```
+
+## data.sql
+
+* Seeding: Carga inicial da base de dados, inserindo 10 clientes
+
+```
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Maria do Bairro', 'maria@gmail.com', '111.225.333-81', TIMESTAMP WITH TIME ZONE '1981-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Pedro Carpinteiro', 'pedro@gmail.com', '111.222.633-81', TIMESTAMP WITH TIME ZONE '1985-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Antonio Pedreiro', 'antonio@gmail.com', '111.272.333-81', TIMESTAMP WITH TIME ZONE '1989-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Ana da Lanchonete', 'ana@gmail.com', '111.222.333-81', TIMESTAMP WITH TIME ZONE '1991-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Gabriela da Padaria', 'gabriela@gmail.com', '119.222.333-81', TIMESTAMP WITH TIME ZONE '1999-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('eduardo Eletricista', 'eduardo@gmail.com', '111.222.313-81', TIMESTAMP WITH TIME ZONE '1996-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Jose da Tapioca', 'jose@gmail.com', '111.282.333-81', TIMESTAMP WITH TIME ZONE '1970-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Izabel da Costura', 'izabel@gmail.com', '151.222.333-81', TIMESTAMP WITH TIME ZONE '1988-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Josefa da Budega', 'josefa@gmail.com', '111.222.343-81', TIMESTAMP WITH TIME ZONE '1970-08-08T14:15:10Z');
+
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Carlos Barbeiro', 'carlos@gmail.com', '131.222.333-81', TIMESTAMP WITH TIME ZONE '1965-08-08T14:15:10Z');
+
+
+```
+
+## API devolvendo as respostas adequadas para caso de falha de validação.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
