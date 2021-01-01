@@ -1,0 +1,10 @@
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Maria do Bairro', 'maria@gmail.com', '111.225.333-81', TIMESTAMP WITH TIME ZONE '1981-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Pedro Carpinteiro', 'pedro@gmail.com', '111.222.633-81', TIMESTAMP WITH TIME ZONE '1985-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Antonio Pedreiro', 'antonio@gmail.com', '111.272.333-81', TIMESTAMP WITH TIME ZONE '1989-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Ana da Lanchonete', 'ana@gmail.com', '111.222.333-81', TIMESTAMP WITH TIME ZONE '1991-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Gabriela da Padaria', 'gabriela@gmail.com', '119.222.333-81', TIMESTAMP WITH TIME ZONE '1999-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('eduardo Eletricista', 'eduardo@gmail.com', '111.222.313-81', TIMESTAMP WITH TIME ZONE '1996-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Jose da Tapioca', 'jose@gmail.com', '111.282.333-81', TIMESTAMP WITH TIME ZONE '1970-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Izabel da Costura', 'izabel@gmail.com', '151.222.333-81', TIMESTAMP WITH TIME ZONE '1988-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Josefa da Budega', 'josefa@gmail.com', '111.222.343-81', TIMESTAMP WITH TIME ZONE '1970-08-08T14:15:10Z');
+INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Carlos Barbeiro', 'carlos@gmail.com', '131.222.333-81', TIMESTAMP WITH TIME ZONE '1965-08-08T14:15:10Z');
