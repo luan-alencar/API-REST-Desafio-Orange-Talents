@@ -197,7 +197,8 @@ INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Carlos Barbei
 
 ```
 
-## API devolvendo as respostas adequadas para caso de falha de validação.
+## API devolvendo as respostas adequadas para caso de falha de validação. Buscando um cliente no banco de dados pelo id, que não existe.
+
 
 
 
