@@ -201,6 +201,76 @@ INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Carlos Barbei
 
 ![alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/error%20404.jpg)
 
+## Tratamento de Exceções
+
+* Objeto não encontrado: resposta http 404, código de resposta padrão quando o usuário faz uma requisição  para encontrar um recurso que não existe
+
+
+## ResourceNotfoundException herdando de RuntimeException
+
+```
+ package com.sistemalima.contabancaria.services.exceptions;
+
+ public class ResourceNotFoundException extends RuntimeException{
+
+	 private static final long serialVersionUID = 1L;
+	
+	 public ResourceNotFoundException(String msg) {
+		   super(msg);
+	}
+
+}
+```
+
+## Metodo buscar cliente por id  da classe ClientService
+
+```
+
+// metodo buscar cliente por id
+
+	@Transactional(readOnly = true)	
+	public ClientDTO findById(Long id) {
+		 Optional<Client> obj = repository.findById(id);
+		 Client entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		 return new ClientDTO(entity);
+	}
+
+```
+
+## Quando for chamado o serviço, e estourar a exceção personalizada, lá no Resource vou tratar a exceção, criando um objeto para receber o Timestamp, status, error, message, path
+
+## StandardError: Objeto criado no Resource para receber a exceção
+
+* checklist:
+* Atributos básico
+* Construtor default 
+* Getters & Setters
+* Serializable
+
+## Manipulador de exceptions: Para que eu não tenha que ficar implementando try catch em todo método do controlador que for ter que tratar uma exceção, irei criar uma classe especial do spring ControllerAdivice. Essa classe vai interceptar a exceção e fazer o tratamento adequado.
+
+## ResourceExceptionHandller:
+
+```
+@ControllerAdvice
+public class ResourceExceptionHandler {
+	
+	// metodo para tratamento de erro / recurso não encontrado 404
+	
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<StandardError> entityNotFound(ResourceNotFoundException e, HttpServletRequest request) {
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		StandardError erro = new StandardError();
+		erro.setTimestamp(Instant.now());
+		erro.setStatus(status.value());
+		erro.setError("Entity not found");
+		erro.setMessage(e.getMessage());
+		erro.setPath(request.getRequestURI());
+		return ResponseEntity.status(status).body(erro);
+	}
+```
+
+
 
 
 
