@@ -199,6 +199,7 @@ INSERT INTO tb_client (nome, email, cpf, data_nascimento) VALUES ('Carlos Barbei
 
 ## API devolvendo as respostas adequadas para caso de falha de validação. Buscando um cliente no banco de dados pelo id, que não existe.
 
+![alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/error%20404.jpg)
 
 
 
