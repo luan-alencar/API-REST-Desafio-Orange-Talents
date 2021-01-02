@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,6 +71,19 @@ public class ClientService {
 			return new ClientDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found" + id);
+		}
+		
+	}
+	
+	// metodo para deletar um cliente / não vai ser monitorado
+	
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+			
+		} 
+		catch (EmptyResultDataAccessException e) {         // exceção guando for deletar id que não existe
+			throw new ResourceNotFoundException("Id not found " + id);
 		}
 		
 	}
