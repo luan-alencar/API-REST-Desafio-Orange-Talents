@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sistemalima.contabancaria.dto.ClientDTO;
 import com.sistemalima.contabancaria.entities.Client;
 import com.sistemalima.contabancaria.repositories.ClientRepository;
+import com.sistemalima.contabancaria.services.exceptions.DataBaseException;
 import com.sistemalima.contabancaria.services.exceptions.ResourceNotFoundException;
 
 
@@ -44,18 +45,30 @@ public class ClientService {
 		return new ClientDTO(entity);
 	}
 	
-	// metodo para inserir um cliente
+	// metodo para inserir um cliente verificando no banco de dados, se já existe email ou cpf duplicados
 	
 	@Transactional
 	public ClientDTO insert(ClientDTO dto) {
+		
+		List<Client> list = repository.findAll();
 		Client entity = new Client();
-		entity.setNome(dto.getNome());
-		entity.setEmail(dto.getEmail());
-		entity.setCpf(dto.getCpf());
-		entity.setDataNascimento(dto.getDatanascimento());
-		entity = repository.save(entity);
+		for (Client client: list) {
+			if (!client.getEmail().equals(dto.getEmail()) && !client.getCpf().equals(dto.getCpf())) {
+				entity.setNome(dto.getNome());
+				entity.setEmail(dto.getEmail());
+				entity.setCpf(dto.getCpf());
+				entity.setDataNascimento(dto.getDatanascimento());
+				entity = repository.save(entity);
+			}
+			else {
+				throw new DataBaseException("Dados duplicados");
+			}
+		}
+		
 		return new ClientDTO(entity);
-	}
+		
+	}	
+	
 	
 	// metodo para atualizar um cliente
 	

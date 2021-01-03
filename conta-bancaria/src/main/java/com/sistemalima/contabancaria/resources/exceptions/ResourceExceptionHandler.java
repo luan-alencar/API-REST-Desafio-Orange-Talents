@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.sistemalima.contabancaria.services.exceptions.DataBaseException;
 import com.sistemalima.contabancaria.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -45,6 +46,18 @@ public class ResourceExceptionHandler {
 		for (FieldError f : e.getBindingResult().getFieldErrors()) {
 			erro.addErro(f.getField(), f.getDefaultMessage());
 		}
+		return ResponseEntity.status(status).body(erro);
+	}
+	
+	@ExceptionHandler(DataBaseException.class)
+	public ResponseEntity<StandardError> entityNotFound(DataBaseException e, HttpServletRequest request) {
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		StandardError erro = new StandardError();
+		erro.setTimestamp(Instant.now());
+		erro.setStatus(status.value());
+		erro.setError("Validation exception");
+		erro.setMessage(e.getMessage());
+		erro.setPath(request.getRequestURI());
 		return ResponseEntity.status(status).body(erro);
 	}
 	
