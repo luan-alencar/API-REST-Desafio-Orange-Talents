@@ -397,6 +397,42 @@ public class ResourceExceptionHandler {
 
 ![alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/13.jpg)
 
+## Item bônus: Proteger a aplicação de e-mail e CPF duplicados
+
+### Classe: ClientService
+
+* O método de inserir um novo recurso no banco de dados, verifica se já existe um cpf e email cadastrados, se existir lança uma exceção e retorna uma resposta de cod 422.
+
+```
+// metodo para inserir um cliente verificando no banco de dados, se já existe email ou cpf duplicados
+	
+	@Transactional
+	public ClientDTO insert(ClientDTO dto) {
+		
+		List<Client> list = repository.findAll();
+		Client entity = new Client();
+		for (Client client: list) {
+			if (!client.getEmail().equals(dto.getEmail()) && !client.getCpf().equals(dto.getCpf())) {
+				entity.setNome(dto.getNome());
+				entity.setEmail(dto.getEmail());
+				entity.setCpf(dto.getCpf());
+				entity.setDataNascimento(dto.getDatanascimento());
+				entity = repository.save(entity);
+			}
+			else {
+				throw new DataBaseException("Dados duplicados");
+			}
+		}
+		
+		return new ClientDTO(entity);
+		
+	}	
+```
+
+## Testando o recurso no Postman, verificando a validação no banco de dados para não houver cpf, email duplicados:
+
+![alt text](https://github.com/wagnersistemalima/API-REST-Desafio-Orange-Talents/blob/main/imagens/testantoRequisicao.jpg)
+
 
 
 
